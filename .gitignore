@@ -1,0 +1,10 @@
+*.o
+*.d
+*.xml
+*.prefs
+*.cyclo
+*.su
+*.elf
+*.list
+*.mk
+/Debug
