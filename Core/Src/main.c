@@ -21,18 +21,23 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
 
+
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define LENGHT_BUFFER 250
 
 /* USER CODE END PD */
+
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
@@ -43,6 +48,11 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+const char* STRING_HELLO_WORLD= "HELLO WORLD!! \n\r";
+const char* STRING_NUMBER_CYCLES = "NUMBER OF CYCLES PERFORMED: %d \n\r";
+/* */
+static uint16_t cycle_counter;
+static char buffer[LENGHT_BUFFER];
 
 /* USER CODE END PV */
 
@@ -51,7 +61,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -67,6 +77,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+
 
   /* USER CODE END 1 */
 
@@ -102,6 +113,18 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	HAL_Delay(500);
+	cycle_counter ++;
+
+
+	/* print string to uart using buffer  */
+	memset(buffer, 0, sizeof(buffer));
+	strcpy(&buffer[0], STRING_HELLO_WORLD);
+	uint16_t sizeBuffer = strlen(&buffer[0]);
+	HAL_UART_Transmit(&huart2, (const uint8_t*)buffer, sizeBuffer ,100);
+
+	/* print string to uart using prtinf  */
+	printf(STRING_NUMBER_CYCLES, cycle_counter);
+
 
   }
   /* USER CODE END 3 */
@@ -227,7 +250,19 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  *   None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the USART2 and Loop until the end of transmission */
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 
+  return ch;
+}
 /* USER CODE END 4 */
 
 /**
