@@ -49,7 +49,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 const char* STRING_HELLO_WORLD= "HELLO WORLD!! \n\r";
-const char* STRING_NUMBER_CYCLES = "NUMBER OF CYCLES PERFORMED: %d \n\r";
+const char* STRING_HELLO_WORLD2= "HELLO WORLD!! \n\r";
+const char* STRING_NUMBER_CYCLES = "NUMBER OF CYCLES PERFORMED: %d   \n\r";
 /* */
 static uint16_t cycle_counter;
 static char buffer[LENGHT_BUFFER];
@@ -123,8 +124,11 @@ int main(void)
 	HAL_UART_Transmit(&huart2, (const uint8_t*)buffer, sizeBuffer ,100);
 
 	/* print string to uart using prtinf  */
-	printf(STRING_NUMBER_CYCLES, cycle_counter);
+	//printf(STRING_NUMBER_CYCLES, cycle_counter);
 
+	/* use sprintf */
+	sprintf(buffer, "%s \n\r   Oggetto_1=0x%x \n\r   Oggetto_2=%d \n\r\n\r", STRING_HELLO_WORLD2, cycle_counter, cycle_counter);
+	HAL_UART_Transmit(&huart2, (const uint8_t*)buffer, 200 ,100);
 
   }
   /* USER CODE END 3 */
